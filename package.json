@@ -1,0 +1,38 @@
+{
+  "name": "h2chain-hotel-api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yuhu-tech/h2chain-hotel-api.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/yuhu-tech/h2chain-hotel-api/issues"
+  },
+  "homepage": "https://github.com/yuhu-tech/h2chain-hotel-api#readme",
+  "dependencies": {
+    "@alipay/mychain": "file:alipay-mychain-0.2.27.tgz",
+    "aes-js": "^3.1.2",
+    "bcryptjs": "^2.4.3",
+    "google-protobuf": "^3.8.0-rc.1",
+    "graphql": "^14.2.1",
+    "graphql-yoga": "^1.17.4",
+    "grpc": "^1.20.3",
+    "jsonwebtoken": "^8.5.1",
+    "math": "0.0.3",
+    "mime": "^2.4.2",
+    "node-schedule": "^1.3.2",
+    "prisma": "^1.32.2",
+    "prisma-binding": "^2.3.10",
+    "prisma-client-lib": "^1.30.4",
+    "prisma-generate-schema": "^1.30.4",
+    "redis": "^2.8.0",
+    "silly-datetime": "^0.1.2"
+  }
+}

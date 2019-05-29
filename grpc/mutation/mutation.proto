@@ -1,0 +1,134 @@
+
+syntax = "proto3";
+
+service Mutation {
+
+    // create order
+    rpc CreateOrder (CreateRequest) returns (CreateReply) {}
+
+    // post order
+    rpc PostOrder (PostRequest) returns (PostReply) {}
+
+    // register order
+    rpc RegistryOrder (RegistryRequest) returns (RegistryReply) {}
+
+    // modify order
+    rpc ModifyOrder (ModifyRequest) returns (ModifyReply) {}
+
+    // modify order's pt
+    rpc ModifyPTOfOrder (ModifyPtRequest) returns (ModifyPtReply) {}
+
+    // close order
+    rpc CloseOrder (CloseRequest) returns (CloseReply) {}
+
+    // edit order's pt remark
+    rpc EditRemark (EditRequest) returns (EditReply) {}
+
+    // clean order
+    rpc CleanOrder (CleanRequest) returns (CleanReply) {}
+}
+
+
+message CreateRequest {
+    string hotelId  = 1;
+    string adviserId = 2;
+    string job = 3;
+    int32 date = 4;
+    int32 duration = 5;
+    int32 count = 6;
+    int32 countMale = 7;
+    int32 countFemale = 8;
+    int32 mode = 9;
+}
+
+message CreateReply {
+    string orderId = 1;
+    int32 createResult = 2;
+}
+
+
+message PostRequest {
+    string orderId = 1;
+    int32 isFloat = 2;
+    int32 hourlySalary = 3;
+    string workContent = 4;
+    string attention = 5;
+}
+
+message PostReply {
+    int32 postResult = 1;
+}
+
+
+message RegistryRequest {
+    string orderId = 1;
+    string ptId = 2;
+    string adviserId = 3;
+    int32 applyTime = 4;
+    int32 signInTime = 5;
+    int32 ptStatus = 6;
+    string registrationChannel = 7;
+}
+
+message RegistryReply {
+    int32 registryResult = 1;
+}
+
+
+message ModifyRequest {
+    string orderId = 1;
+    int32 dateChanged = 2;
+    int32 durationChanged = 3;
+    int32 countChanged = 4;
+    int32 countMaleChanged = 5;
+    int32 mode = 6;
+}
+
+message ModifyReply {
+    int32 modifyResult = 1;
+}
+
+
+message ModifyPtRequest {
+    string orderId = 1;
+    string ptId = 2;
+    int32 targetStatus = 3;
+    int32 sourceStatus = 4;
+    int32 ptPerformance = 5;
+    int32 objectReason = 6;
+}
+
+message ModifyPtReply {
+    int32 modifyResult = 1;
+}
+
+
+message CloseRequest {
+    string orderId = 1;
+}
+
+message CloseReply {
+    int32 closeResult = 1;
+}
+
+message EditRequest {
+    string orderId = 1;
+    string ptId = 2;
+    int32 startDate = 3;
+    int32 endDate = 4;
+    int32 realSalary = 5;
+    int32 isWorked = 6;
+    int32 type = 7;
+}
+
+message EditReply {
+    int32 editResult = 1;
+}
+
+message CleanRequest {
+    int32 date = 1;
+}
+
+message CleanReply {
+    string orderOrigins = 1;
+}
