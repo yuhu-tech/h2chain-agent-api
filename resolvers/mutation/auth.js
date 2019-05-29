@@ -31,28 +31,7 @@ const auth = {
           user: { connect: { wechat: wechat } }
         }
       )
-      //为用户创建钱包
-      var keys =  await CreateAccount(personalmsg.id)
-      var updatekeys = await ctx.prismaClient.updatePersonalmsg(
-        {
-          data: {
-            privatekey:keys.privateKey,
-            publickey:keys.publicKey,
-          },
-          where: { id : personalmsg.id }
-        }
-      )
-      console.log("创建钱包成功")
-       var identity = await QueryAccount(personalmsg.id)
-       var updateidentity = await ctx.prismaAgent.updatePersonalmsg(
-         {
-           data: {
-             ptadd : identity.identity
-           },
-           where: { id : personalmsg.id }
-         }
-       )
-       console.log("更新钱包信息成功")
+      //这里就不用创建钱包了
     }
     return {
       token: jwt.sign({ userId: user.id }, 'jwtsecret123'),
