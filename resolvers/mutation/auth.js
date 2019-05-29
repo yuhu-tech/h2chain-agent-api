@@ -44,11 +44,6 @@ const auth = {
     const users = await ctx.prismaAgent.users({ where: { id } })
     const personalmsgs = await ctx.prismaAgent.personalmsgs({ where: { user: { id: id } } })
     //判断是否是第一次更新个人信息
-    var flag = 0
-    if ( personalmsgs[0].name == '') {
-      flag = 1
-    }
-
     try {
       if (users.length == 0) {
         console.log("can't find this user")
@@ -68,22 +63,6 @@ const auth = {
             where: { id: personalmsgs[0].id }
           }
         )
-        //开始赠送
-        if (flag == 1){
-           result = await Issue(personalmsgs[0].ptadd ,200)
-           console.log(result)
-        if (result.output == true){
-           var personalmsg = await ctx.prismaHotel.createTx({
-             from : "0x6f8f5db4a11573d816094b496502b36b3608e3b505936ee34d7eddc4aeba822c",
-             to : personalmsgs[0].ptadd,
-             value : 200,
-             hash: result.txhash,
-             reason: "完善个人信息赠送",
-             timestamp: math.round(Date.now()/1000)
-           })
-          console.log("赠送成功")
-         }
-        }
       }
       return true
     } catch (error) {
