@@ -180,6 +180,28 @@ function deserialize_RegistryRequest(buffer_arg) {
   return mutation_pb.RegistryRequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
+function serialize_TransmitReply(arg) {
+  if (!(arg instanceof mutation_pb.TransmitReply)) {
+    throw new Error('Expected argument of type TransmitReply');
+  }
+  return new Buffer(arg.serializeBinary());
+}
+
+function deserialize_TransmitReply(buffer_arg) {
+  return mutation_pb.TransmitReply.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_TransmitRequest(arg) {
+  if (!(arg instanceof mutation_pb.TransmitRequest)) {
+    throw new Error('Expected argument of type TransmitRequest');
+  }
+  return new Buffer(arg.serializeBinary());
+}
+
+function deserialize_TransmitRequest(buffer_arg) {
+  return mutation_pb.TransmitRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 
 var MutationService = exports.MutationService = {
   // create order
@@ -277,6 +299,18 @@ var MutationService = exports.MutationService = {
     requestDeserialize: deserialize_CleanRequest,
     responseSerialize: serialize_CleanReply,
     responseDeserialize: deserialize_CleanReply,
+  },
+  // transmit order
+  transmitOrder: {
+    path: '/Mutation/TransmitOrder',
+    requestStream: false,
+    responseStream: false,
+    requestType: mutation_pb.TransmitRequest,
+    responseType: mutation_pb.TransmitReply,
+    requestSerialize: serialize_TransmitRequest,
+    requestDeserialize: deserialize_TransmitRequest,
+    responseSerialize: serialize_TransmitReply,
+    responseDeserialize: deserialize_TransmitReply,
   },
 };
 

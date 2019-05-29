@@ -4,6 +4,28 @@
 var grpc = require('grpc');
 var query_pb = require('./query_pb.js');
 
+function serialize_QueryAgentReply(arg) {
+  if (!(arg instanceof query_pb.QueryAgentReply)) {
+    throw new Error('Expected argument of type QueryAgentReply');
+  }
+  return new Buffer(arg.serializeBinary());
+}
+
+function deserialize_QueryAgentReply(buffer_arg) {
+  return query_pb.QueryAgentReply.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_QueryAgentRequest(arg) {
+  if (!(arg instanceof query_pb.QueryAgentRequest)) {
+    throw new Error('Expected argument of type QueryAgentRequest');
+  }
+  return new Buffer(arg.serializeBinary());
+}
+
+function deserialize_QueryAgentRequest(buffer_arg) {
+  return query_pb.QueryAgentRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
 function serialize_QueryExperienceReply(arg) {
   if (!(arg instanceof query_pb.QueryExperienceReply)) {
     throw new Error('Expected argument of type QueryExperienceReply');
@@ -24,6 +46,28 @@ function serialize_QueryExperienceRequest(arg) {
 
 function deserialize_QueryExperienceRequest(buffer_arg) {
   return query_pb.QueryExperienceRequest.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_QueryOOAReply(arg) {
+  if (!(arg instanceof query_pb.QueryOOAReply)) {
+    throw new Error('Expected argument of type QueryOOAReply');
+  }
+  return new Buffer(arg.serializeBinary());
+}
+
+function deserialize_QueryOOAReply(buffer_arg) {
+  return query_pb.QueryOOAReply.deserializeBinary(new Uint8Array(buffer_arg));
+}
+
+function serialize_QueryOOARequest(arg) {
+  if (!(arg instanceof query_pb.QueryOOARequest)) {
+    throw new Error('Expected argument of type QueryOOARequest');
+  }
+  return new Buffer(arg.serializeBinary());
+}
+
+function deserialize_QueryOOARequest(buffer_arg) {
+  return query_pb.QueryOOARequest.deserializeBinary(new Uint8Array(buffer_arg));
 }
 
 function serialize_QueryPTReply(arg) {
@@ -141,6 +185,30 @@ var QueryOrderService = exports.QueryOrderService = {
     requestDeserialize: deserialize_QueryExperienceRequest,
     responseSerialize: serialize_QueryExperienceReply,
     responseDeserialize: deserialize_QueryExperienceReply,
+  },
+  // adviser query agent list of order
+  queryAgentOfOrder: {
+    path: '/QueryOrder/QueryAgentOfOrder',
+    requestStream: false,
+    responseStream: false,
+    requestType: query_pb.QueryAgentRequest,
+    responseType: query_pb.QueryAgentReply,
+    requestSerialize: serialize_QueryAgentRequest,
+    requestDeserialize: deserialize_QueryAgentRequest,
+    responseSerialize: serialize_QueryAgentReply,
+    responseDeserialize: deserialize_QueryAgentReply,
+  },
+  // agent query order
+  queryOrderOfAgent: {
+    path: '/QueryOrder/QueryOrderOfAgent',
+    requestStream: false,
+    responseStream: false,
+    requestType: query_pb.QueryOOARequest,
+    responseType: query_pb.QueryOOAReply,
+    requestSerialize: serialize_QueryOOARequest,
+    requestDeserialize: deserialize_QueryOOARequest,
+    responseSerialize: serialize_QueryOOAReply,
+    responseDeserialize: deserialize_QueryOOAReply,
   },
 };
 

@@ -26,6 +26,9 @@ service Mutation {
 
     // clean order
     rpc CleanOrder (CleanRequest) returns (CleanReply) {}
+
+    // transmit order
+    rpc TransmitOrder (TransmitRequest) returns (TransmitReply) {}
 }
 
 
@@ -59,7 +62,6 @@ message PostReply {
     int32 postResult = 1;
 }
 
-
 message RegistryRequest {
     string orderId = 1;
     string ptId = 2;
@@ -67,7 +69,8 @@ message RegistryRequest {
     int32 applyTime = 4;
     int32 signInTime = 5;
     int32 ptStatus = 6;
-    string registrationChannel = 7;
+    int32 type = 7;
+    string inviterId = 8;
 }
 
 message RegistryReply {
@@ -131,4 +134,13 @@ message CleanRequest {
 
 message CleanReply {
     string orderOrigins = 1;
+}
+
+message TransmitRequest {
+    string orderId = 1;
+    string agentId = 2;
+}
+
+message TransmitReply {
+    int32 transmitResult = 1;
 }

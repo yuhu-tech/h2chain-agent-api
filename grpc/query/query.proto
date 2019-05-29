@@ -9,6 +9,18 @@ service QueryOrder {
     // hotel/adviser query order's pt
     rpc QueryPTOfOrder (QueryPTRequest) returns (QueryPTReply) {}
 
+    // adviser query pt's remark
+    rpc QueryRemark (QueryRemarkRequest) returns (QueryRemarkReply) {}
+
+    // adviser query pt' work experience
+    rpc QueryExperience (QueryExperienceRequest) returns (QueryExperienceReply) {}
+
+    // adviser query agent list of order
+    rpc QueryAgentOfOrder (QueryAgentRequest) returns (QueryAgentReply) {}
+
+    // agent query order
+    rpc QueryOrderOfAgent (QueryOOARequest) returns (QueryOOAReply) {}
+
 }
 
 
@@ -30,8 +42,9 @@ message QueryReply {
 message QueryPTRequest {
     string orderId = 1;
     string ptId = 2;
-    string registrationChannel = 3;
-    int32 ptStatus = 4;
+    int32 type = 3;
+    string inviterId = 4;
+    int32 ptStatus = 5;
 }
 
 message PT {
@@ -43,8 +56,45 @@ message PT {
         string orderId = 6;
         string id = 7;
         int32 ptStatus = 8;
+        int32 type = 9;
+        string inviterId = 10;
 }
 
 message QueryPTReply {
     repeated PT orderPts = 1;
+}
+
+message QueryRemarkRequest {
+    string orderId = 1;
+    string ptId  = 2;
+}
+
+message QueryRemarkReply {
+    string remark = 1;
+}
+
+message QueryExperienceRequest {
+    string ptId = 1;
+}
+
+message QueryExperienceReply {
+    string workExperience = 1;
+}
+
+message QueryAgentRequest {
+    string orderId = 1;
+}
+
+message QueryAgentReply {
+    string agentList = 1;
+}
+
+message QueryOOARequest {
+    string agentId = 1;
+    int32 limit = 2;
+    int32 skip = 3;
+}
+
+message QueryOOAReply {
+    repeated string order_list = 1;
 }
