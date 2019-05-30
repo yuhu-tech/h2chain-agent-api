@@ -91,8 +91,7 @@ message QueryAgentReply {
 
 message QueryOOARequest {
     string agentId = 1;
-    int32 limit = 2;
-    int32 skip = 3;
+    int32 status = 2;
 }
 
 message QueryOOAReply {

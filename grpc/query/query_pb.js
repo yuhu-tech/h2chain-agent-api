@@ -2200,8 +2200,7 @@ proto.QueryOOARequest.prototype.toObject = function(opt_includeInstance) {
 proto.QueryOOARequest.toObject = function(includeInstance, msg) {
   var f, obj = {
     agentid: jspb.Message.getFieldWithDefault(msg, 1, ""),
-    limit: jspb.Message.getFieldWithDefault(msg, 2, 0),
-    skip: jspb.Message.getFieldWithDefault(msg, 3, 0)
+    status: jspb.Message.getFieldWithDefault(msg, 2, 0)
   };
 
   if (includeInstance) {
@@ -2244,11 +2243,7 @@ proto.QueryOOARequest.deserializeBinaryFromReader = function(msg, reader) {
       break;
     case 2:
       var value = /** @type {number} */ (reader.readInt32());
-      msg.setLimit(value);
-      break;
-    case 3:
-      var value = /** @type {number} */ (reader.readInt32());
-      msg.setSkip(value);
+      msg.setStatus(value);
       break;
     default:
       reader.skipField();
@@ -2286,17 +2281,10 @@ proto.QueryOOARequest.serializeBinaryToWriter = function(message, writer) {
       f
     );
   }
-  f = message.getLimit();
+  f = message.getStatus();
   if (f !== 0) {
     writer.writeInt32(
       2,
-      f
-    );
-  }
-  f = message.getSkip();
-  if (f !== 0) {
-    writer.writeInt32(
-      3,
       f
     );
   }
@@ -2319,32 +2307,17 @@ proto.QueryOOARequest.prototype.setAgentid = function(value) {
 
 
 /**
- * optional int32 limit = 2;
+ * optional int32 status = 2;
  * @return {number}
  */
-proto.QueryOOARequest.prototype.getLimit = function() {
+proto.QueryOOARequest.prototype.getStatus = function() {
   return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 2, 0));
 };
 
 
 /** @param {number} value */
-proto.QueryOOARequest.prototype.setLimit = function(value) {
+proto.QueryOOARequest.prototype.setStatus = function(value) {
   jspb.Message.setField(this, 2, value);
-};
-
-
-/**
- * optional int32 skip = 3;
- * @return {number}
- */
-proto.QueryOOARequest.prototype.getSkip = function() {
-  return /** @type {number} */ (jspb.Message.getFieldWithDefault(this, 3, 0));
-};
-
-
-/** @param {number} value */
-proto.QueryOOARequest.prototype.setSkip = function(value) {
-  jspb.Message.setField(this, 3, value);
 };
 
 
