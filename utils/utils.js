@@ -33,6 +33,9 @@ function getOpenId(jsCode, num) {
         } else if (num === 3) {
             appid = config.Appids.testPt
             secret = config.Secrets.testPt
+        } else if (num === 4){
+            appid = config.Appids.testAgent
+            secret = config.Secrets.testAgent
         } else {
             resolve()
         }

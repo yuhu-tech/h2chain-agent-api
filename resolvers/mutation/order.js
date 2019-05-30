@@ -5,10 +5,7 @@ const grpc = require('grpc');
 const config = require('../../conf/config')
 const sd = require('silly-datetime')
 const formid = require('../../msg/msghandle/formid/redis')
-const sendtoh = require('../../msg/msghandle/sendmsg/hotelmsg')
 const client = new services.MutationClient(config.localip, grpc.credentials.createInsecure());
-const handles = require('../handle/adviser')
-const sendtop = require('../../msg/msghandle/sendmsg/ptmsg')
 
 const order = {
   async transmit(parent, args, ctx, info) {
