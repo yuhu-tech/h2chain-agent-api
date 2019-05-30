@@ -1,0 +1,150 @@
+# agent端
+
+type Query {
+  me: User!
+  getphonenumber(encryptedData:String!,iv:String!,jscode:String!):String
+  search(orderid: String,state:Int,datetime:Int,isregistered:Int):[Order]
+}
+
+type Adviser{
+  name:String!
+  phone:String!
+  companyname:String!
+}
+
+type Order {
+  hash : String
+  adviser: Adviser!
+  hotel:Hotel!
+  state : Int
+  originorder:Originorder!
+  modifiedorder:[Modifiedorder]
+  maleyet:Int
+  femaleyet:Int
+  countyet:Int
+  postorder:Postorder
+  ptorderstate: Int
+  #1 == registered and 2 == refused and 3 == re-registered and 4 == to-registered and 5 == give up
+  pt:[PtPayload]
+}
+
+type PtPayload{
+  ptid:String
+  name:String
+  idnumber:String
+  gender:Int
+  wechatname:String
+  phonenumber:String
+  worktimes:Int
+  height:Int
+  weight:Int
+  ptorderstate:Int
+  remark:Remark
+  workhours:Int
+}
+
+type Remark{
+  startdate:Int
+  enddate:Int
+  realsalary:Int
+  isworked:Int
+}
+
+type Hotel{
+  hotelid : String!
+  hotelname: String!
+  hotelphone:String!
+  hotelintroduction:String!
+  hoteladdress:String!
+  cover:[String]
+}
+
+type Postorder{
+  orderid:String
+  salary:Int
+  workcontent:String
+  attention:String
+}
+
+
+type Originorder{
+  orderid : String!
+  occupation: String!
+  datetime: Int!
+  duration: Int!
+  mode: Int!
+  count: Int!
+  male: Int!
+  female: Int!
+  hotelid: Int!
+  adviserid: Int!
+}
+
+
+type Modifiedorder{
+  orderid: String
+  changeddatetime: Int
+  changedduration: Int
+  changedmode: Int
+  changedcount: Int
+  changedmale: Int
+  changedfemale: Int
+}
+
+type Mutation {
+#signup(email: String!, password: String!, name: String!): AuthPayload!
+  login(jscode:String!): AuthPayload!
+  createpersonalmsg(personalmsg:InputPersonalmsg!):UserPayload
+  modifypersonalmsg(personalmsg:InputPersonalmsg!):Boolean!
+  updatewechat:Boolean!
+  transmit(orderid:String!):Boolean!
+}
+
+
+type UserPayload{
+  user:User!
+  error:Boolean!
+}
+
+input InputPersonalmsg{
+  name:String!
+  phonenumber:String!
+  idnumber:String!
+  gender:Int!
+  #1 represents male and 2 represents female
+  height:Int!
+  weight:Int!
+  status:Int!
+  #1 represents students while 2 represents !students
+}
+
+type Personalmsg{
+  name:String!
+  phonenumber:String!
+  idnumber:String!
+  gender:Int!
+  #1 represents male and 2 represents female
+  height:Int!
+  weight:Int!
+  status:Int!
+  #1 represents students while 2 represents !students
+  user:User!
+}
+
+type OrderPayload {
+  orderid: String
+  error: Boolean
+}
+
+type AuthPayload {
+  token: String!
+  user: User!
+}
+
+type User {
+  id : ID!
+  wechat: String
+  personalmsg:Personalmsg
+}
+
+
