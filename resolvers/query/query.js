@@ -1,5 +1,5 @@
 const { getUserId } = require('../../utils/utils')
-const handles = require('../handle/hotel')
+const handles = require('../handle/agent')
 const { QueryTransaction } = require('../../token/ali_token/handle/query/query')
 const utils = require('../../token/ali_token/utils/utils')
 const query = {
@@ -18,14 +18,11 @@ const query = {
   },
   async search(parent, args, ctx, info) {
     const id = getUserId(ctx)
-    if (args.state == 12) {
-      //TODO 这里agentgetOrderList还没写  要在handle中补充，应该只显示为2的订单 表示正在招募中
-      todo = await handles.AgentGetOrderList(ctx, id, args.orderid, 1, args.datetime, args.ptname);
+    if (args.status == 2) {
       doing = await handles.AgentGetOrderList(ctx, id, args.orderid, 2, args.datetime, args.ptname);
-      Array.prototype.push.apply(todo, doing)
-      return todo
+      return doing
     } else {
-      return handles.AgentGetOrderList(ctx, id, args.orderid, args.state, args.datetime, args.ptname)
+      return handles.AgentGetOrderList(ctx, id, args.orderid, args.status, args.datetime, args.ptname)
     }
   }
 }

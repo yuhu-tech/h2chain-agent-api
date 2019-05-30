@@ -6,9 +6,9 @@ var client = new services.QueryOrderClient(config.localip, grpc.credentials.crea
 
 
 // 酒店端订单页面
-function queryOrder(request) {
+function queryOrderOfAgent(request) {
   return new Promise((resolve, reject) => {
-    client.queryOrder(request, (err, date) => {
+    client.queryOrderOfAgent(request, (err, date) => {
       if (err) reject(err);
       resolve(date);
     })
@@ -34,7 +34,7 @@ function queryHistory(request) {
   })
 }
 
-async function HotelSearchHistory(ctx, ptid) {
+async function AgentSearchHistory(ctx, ptid) {
   var request = new messages.QueryExperienceRequest();
   request.setPtid(ptid)
   var response = await queryHistory(request)
@@ -43,20 +43,20 @@ async function HotelSearchHistory(ctx, ptid) {
   if (res.orderOrigins.length < 5) {
     var worked = {}
     for (i = 0; i < res.orderOrigins.length; i++) {
-      //worked['hotelid'] = res.orderOrigins[i].hotelId;
-      worked['occupation'] = res.orderOrigins[i].job;
-      var users = await ctx.prismaHotel.users({ where: { id: res.orderOrigins[i].hotelId } })
-      var profiles = await ctx.prismaHotel.profiles({ where: { user: { id: res.orderOrigins[i].hotelId } } })
+      //worked['hotelid'] = res.orderOrigins[0].hotelId;
+      worked['occupation'] = res.orderOrigins[0].job;
+      var users = await ctx.prismaHotel.users({ where: { id: res.orderOrigins[0].hotelId } })
+      var profiles = await ctx.prismaHotel.profiles({ where: { user: { id: res.orderOrigins[0].hotelId } } })
       worked['hotelname'] = profiles[0].name
       history.push(worked)
     }
   } else {
     var worked = {}
     for (i = 0; i < 5; i++) {
-      //worked['hotelid'] = res.orderOrigins[i].hotelID;
-      worked['occupation'] = res.orderOrigins[i].job;
-      var users = await ctx.prismaHotel.users({ where: { id: res.orderOrigins[i].hotelId } })
-      var profiles = await ctx.prismaHotel.profiles({ where: { user: { id: res.orderOrigins[i].hotelId } } })
+      //worked['hotelid'] = res.orderOrigins[0].hotelID;
+      worked['occupation'] = res.orderOrigins[0].job;
+      var users = await ctx.prismaHotel.users({ where: { id: res.orderOrigins[0].hotelId } })
+      var profiles = await ctx.prismaHotel.profiles({ where: { user: { id: res.orderOrigins[0].hotelId } } })
       worked['hotelname'] = profiles[0].name
       history.push(worked)
     }
@@ -64,92 +64,86 @@ async function HotelSearchHistory(ctx, ptid) {
   return history
 }
 
-async function HotelGetOrderList(ctx, hotelid, orderid, state, datetime, ptname) {
+async function AgentGetOrderList(ctx, agentid, orderid, status, datetime, ptname) {
   try {
-    var request = new messages.QueryRequest();
-    if (orderid != null && orderid != undefined) {
-      request.setOrderid(orderid)
+    var request = new messages.QueryOOARequest();
+    if (agentid != null && agentid != undefined) {
+      request.setAgentid(agentid)
     }
-    if (hotelid != null && hotelid != undefined) {
-      request.setHotelid(hotelid)
+    if (status != null && status != undefined) {
+      request.setStatus(status)
     }
-    if (datetime != null && datetime != undefined) {
-      request.setDate(datetime)
-    }
-    if (state != null && state != undefined) {
-      request.setStatus(state)
-    }
-    var response = await queryOrder(request);
-    var res = JSON.parse(response.array[0])
-    var orderList = []
-    for (var i = 0; i < res.orderOrigins.length; i++) {
+
+    var response = await queryOrderOfAgent(request);
+    for (var i = 0; i < response.array.length; i++) {
+      var res = JSON.parse(response.array[i])
       var obj = {}
 
       var modifiedorder = []
       var isModified = false
-      if (res.orderOrigins[i].orderHotelModifies.length != 0) {
+      if (res.orderOrigins[0].orderHotelModifies.length != 0) {
         isModified = true
-        for (var j = 0; j < res.orderOrigins[i].orderHotelModifies.length; j++) {
+        for (var j = 0; j < res.orderOrigins[0].orderHotelModifies.length; j++) {
           var modifiedorderObj = {}
-          modifiedorderObj['orderid'] = res.orderOrigins[i].id
-          modifiedorderObj['changeddatetime'] = res.orderOrigins[i].orderHotelModifies[j].dateTime
-          modifiedorderObj['changedduration'] = res.orderOrigins[i].orderHotelModifies[j].duration / 3600
-          modifiedorderObj['changedmode'] = res.orderOrigins[i].orderHotelModifies[j].mode
-          modifiedorderObj['changedcount'] = res.orderOrigins[i].orderHotelModifies[j].count
+          modifiedorderObj['orderid'] = res.orderOrigins[0].id
+          modifiedorderObj['changeddatetime'] = res.orderOrigins[0].orderHotelModifies[j].dateTime
+          modifiedorderObj['changedduration'] = res.orderOrigins[0].orderHotelModifies[j].duration / 3600
+          modifiedorderObj['changedmode'] = res.orderOrigins[0].orderHotelModifies[j].mode
+          modifiedorderObj['changedcount'] = res.orderOrigins[0].orderHotelModifies[j].count
           // there are two conditions: 1) if changed mode = 0 ,we set changed male and change female = 0 else we will
           // set the female  = count - male
           if (modifiedorderObj['changedmode'] == 0) {
             modifiedorderObj['changedmale'] = 0
             modifiedorderObj['changedfemale'] = 0
           } else {
-            modifiedorderObj['changedmale'] = res.orderOrigins[i].orderHotelModifies[j].countMale
-            modifiedorderObj['changedfemale'] = res.orderOrigins[i].orderHotelModifies[j].count - res.orderOrigins[i].orderHotelModifies[j].countMale
+            modifiedorderObj['changedmale'] = res.orderOrigins[0].orderHotelModifies[j].countMale
+            modifiedorderObj['changedfemale'] = res.orderOrigins[0].orderHotelModifies[j].count - res.orderOrigins[0].orderHotelModifies[j].countMale
           }
           modifiedorder.push(modifiedorderObj)
         }
       }
 
       var originorder = {}
-      originorder['hotelid'] = res.orderOrigins[i].hotelId
-      originorder['adviserid'] = res.orderOrigins[i].adviserId
-      originorder['orderid'] = res.orderOrigins[i].id
-      originorder['occupation'] = res.orderOrigins[i].job
-      originorder['datetime'] = res.orderOrigins[i].datetime
-      originorder['duration'] = res.orderOrigins[i].duration / 3600
-      originorder['mode'] = res.orderOrigins[i].mode
-      originorder['orderstate'] = res.orderOrigins[i].status - 1
+      originorder['hotelid'] = res.orderOrigins[0].hotelId
+      originorder['adviserid'] = res.orderOrigins[0].adviserId
+      originorder['orderid'] = res.orderOrigins[0].id
+      originorder['occupation'] = res.orderOrigins[0].job
+      originorder['datetime'] = res.orderOrigins[0].datetime
+      originorder['duration'] = res.orderOrigins[0].duration / 3600
+      originorder['mode'] = res.orderOrigins[0].mode
+      originorder['orderstate'] = res.orderOrigins[0].status - 1
 
-      if (res.orderOrigins[i].orderAdviserModifies.length != 0) {
-        if (res.orderOrigins[i].orderAdviserModifies[0].isFloat) {
+      if (res.orderOrigins[0].orderAdviserModifies.length != 0) {
+        if (res.orderOrigins[0].orderAdviserModifies[0].isFloat) {
           //we judge if we will tranfer male and female number by the mode
-          if (res.orderOrigins[i].mode == 0) {
+          if (res.orderOrigins[0].mode == 0) {
             originorder['male'] = 0
             originorder['female'] = 0
-            originorder['count'] = Math.ceil(res.orderOrigins[i].count * 1.05)
+            originorder['count'] = Math.ceil(res.orderOrigins[0].count * 1.05)
           } else {
-            originorder['male'] = Math.ceil(res.orderOrigins[i].countMale * 1.05)
-            originorder['female'] = Math.ceil((res.orderOrigins[i].count - res.orderOrigins[i].countMale) * 1.05)
+            originorder['male'] = Math.ceil(res.orderOrigins[0].countMale * 1.05)
+            originorder['female'] = Math.ceil((res.orderOrigins[0].count - res.orderOrigins[0].countMale) * 1.05)
             originorder['count'] = originorder['male'] + originorder['female']
           }
         } else {
-          if (res.orderOrigins[i].mode == 0) {
+          if (res.orderOrigins[0].mode == 0) {
             originorder['male'] = 0
             originorder['female'] = 0
-            originorder['count'] = res.orderOrigins[i].count
+            originorder['count'] = res.orderOrigins[0].count
           } else {
-            originorder['male'] = res.orderOrigins[i].countMale
-            originorder['female'] = res.orderOrigins[i].count - res.orderOrigins[i].countMale
+            originorder['male'] = res.orderOrigins[0].countMale
+            originorder['female'] = res.orderOrigins[0].count - res.orderOrigins[0].countMale
             originorder['count'] = originorder['male'] + originorder['female']
           }
         }
       } else {
-        if (res.orderOrigins[i].mode == 0) {
+        if (res.orderOrigins[0].mode == 0) {
           originorder['male'] = 0
           originorder['female'] = 0
-          originorder['count'] = res.orderOrigins[i].count
+          originorder['count'] = res.orderOrigins[0].count
         } else {
-          originorder['male'] = res.orderOrigins[i].countMale
-          originorder['female'] = res.orderOrigins[i].count - res.orderOrigins[i].countMale
+          originorder['male'] = res.orderOrigins[0].countMale
+          originorder['female'] = res.orderOrigins[0].count - res.orderOrigins[0].countMale
           originorder['count'] = originorder['male'] + originorder['female']
         }
 
@@ -157,7 +151,7 @@ async function HotelGetOrderList(ctx, hotelid, orderid, state, datetime, ptname)
 
       var adviser = {}
       //we add retrieve adviserId here to implement more messsages such as phone and companyname
-      var adviserId = res.orderOrigins[i].adviserId
+      var adviserId = res.orderOrigins[0].adviserId
       var users = await ctx.prismaHr.users({ where: { id: adviserId } })
       var profiles = await ctx.prismaHr.profiles({ where: { user: { id: users[0].id } } })
       adviser['name'] = users[0].name
@@ -166,14 +160,14 @@ async function HotelGetOrderList(ctx, hotelid, orderid, state, datetime, ptname)
       obj['modifiedorder'] = modifiedorder
       obj['originorder'] = originorder
       obj['adviser'] = adviser
-      obj['state'] = res.orderOrigins[i].status - 1
+      obj['state'] = res.orderOrigins[0].status - 1
 
       var pts = []
       // 查询当前已报名的男女人数
       // 调用queryPTOfOrder()接口查询，某个订单下已报名PT的总人数
       try {
         var request = new messages.QueryPTRequest();
-        request.setOrderid(res.orderOrigins[i].id);
+        request.setOrderid(res.orderOrigins[0].id);
         request.setPtstatus(13);
         var response = await queryPt(request)
         obj['countyet'] = response.array[0].length
@@ -191,7 +185,7 @@ async function HotelGetOrderList(ctx, hotelid, orderid, state, datetime, ptname)
           var pt = {}
           pt['ptid'] = ptid
           pt['name'] = personalmsgs[0].name
-          if (ptname != null && ptname != undefined && pt['name'].indexOf(ptname) == -1)  { continue }
+          if (ptname != null && ptname != undefined && pt['name'].indexOf(ptname) == -1) { continue }
           pt['idnumber'] = personalmsgs[0].idnumber
           pt['gender'] = personalmsgs[0].gender
           pt['wechatname'] = "mocked wechat id"
@@ -202,9 +196,9 @@ async function HotelGetOrderList(ctx, hotelid, orderid, state, datetime, ptname)
           pt['weight'] = personalmsgs[0].weight
           //here we retrieve ptorder state
           pt['ptorderstate'] = response.array[0][k][7]
-          var contracts = await ctx.prismaHotel.contracts({where:{AND:[{orderid:res.orderOrigins[i].id},{ptid:ptid}]}})
-          if ( contracts[0] != undefined ){
-          pt['hash'] = contracts[0].hash
+          var contracts = await ctx.prismaHotel.contracts({ where: { AND: [{ orderid: res.orderOrigins[0].id }, { ptid: ptid }] } })
+          if (contracts[0] != undefined) {
+            pt['hash'] = contracts[0].hash
           }
           //here is worktimes and workhours
           var requestworktime = new messages.QueryExperienceRequest()
@@ -242,6 +236,6 @@ async function HotelGetOrderList(ctx, hotelid, orderid, state, datetime, ptname)
 }
 
 
-module.exports = { queryOrder, queryPt, HotelGetOrderList, HotelSearchHistory }
+module.exports = { queryOrderOfAgent, queryPt, AgentGetOrderList, AgentSearchHistory }
 
 
