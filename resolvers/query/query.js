@@ -18,11 +18,11 @@ const query = {
   },
   async search(parent, args, ctx, info) {
     const id = getUserId(ctx)
-    if (args.status == 2) {
+    if (args.state == 11) {
       doing = await handles.AgentGetOrderList(ctx, id, args.orderid, 2, args.datetime, args.ptname);
       return doing
     } else {
-      return handles.AgentGetOrderList(ctx, id, args.orderid, args.status, args.datetime, args.ptname)
+      return handles.AgentGetOrderList(ctx, id, args.orderid, args.state, args.datetime, args.ptname)
     }
   }
 }

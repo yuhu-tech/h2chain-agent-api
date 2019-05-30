@@ -66,6 +66,7 @@ async function AgentSearchHistory(ctx, ptid) {
 
 async function AgentGetOrderList(ctx, agentid, orderid, status, datetime, ptname) {
   try {
+    var orderList = []
     var request = new messages.QueryOOARequest();
     if (agentid != null && agentid != undefined) {
       request.setAgentid(agentid)
@@ -73,12 +74,10 @@ async function AgentGetOrderList(ctx, agentid, orderid, status, datetime, ptname
     if (status != null && status != undefined) {
       request.setStatus(status)
     }
-
     var response = await queryOrderOfAgent(request);
     for (var i = 0; i < response.array.length; i++) {
       var res = JSON.parse(response.array[i])
       var obj = {}
-
       var modifiedorder = []
       var isModified = false
       if (res.orderOrigins[0].orderHotelModifies.length != 0) {
@@ -162,14 +161,45 @@ async function AgentGetOrderList(ctx, agentid, orderid, status, datetime, ptname
       obj['adviser'] = adviser
       obj['state'] = res.orderOrigins[0].status - 1
 
+      var hotel = {}
+      //we add to retrieve from local database for implement of Hotel messgae
+      hotel['hotelid'] = res.orderOrigins[0].hotelId
+      var users = await ctx.prismaHotel.users({ where: { id: res.orderOrigins[i].hotelId } })
+      var profiles = await ctx.prismaHotel.profiles({ where: { user: { id: users[0].id } } })
+      hotel['hotelname'] = profiles[0].name
+      hotel['hotelphone'] = profiles[0].phone
+      hotel['hotelintroduction'] = profiles[0].introduction
+      hotel['hoteladdress'] = profiles[0].address
+      hotel['cover'] = profiles[0].cover
+
+      var postorder = {}
+      if (res.orderOrigins[i].orderAdviserModifies.length != 0) {
+          postorder['orderid'] = res.orderOrigins[0].id
+          postorder['salary'] = res.orderOrigins[0].orderAdviserModifies[0].hourlySalary
+          postorder['workcontent'] = res.orderOrigins[0].orderAdviserModifies[0].workCount   // 这里有一个命名错误，是由于datamodel.graphql 里面字段错误造成的，后续会改
+          postorder['attention'] = res.orderOrigins[0].orderAdviserModifies[0].attention
+          postorder['isfloat'] = res.orderOrigins[0].orderAdviserModifies[0].isFloat
+      }
+
+      obj['modifiedorder'] = modifiedorder
+      obj['originorder'] = originorder
+      obj['adviser'] = adviser
+      obj['hotel'] = hotel
+      obj['postorder'] = postorder
+      obj['state'] = res.orderOrigins[i].status - 1
+
       var pts = []
       // 查询当前已报名的男女人数
       // 调用queryPTOfOrder()接口查询，某个订单下已报名PT的总人数
       try {
+
         var request = new messages.QueryPTRequest();
         request.setOrderid(res.orderOrigins[0].id);
         request.setPtstatus(13);
+        request.setType(3)
+        request.setInviterid(agentid)
         var response = await queryPt(request)
+        console.log(response)
         obj['countyet'] = response.array[0].length
         if (obj['maleyet'] == undefined) { obj['maleyet'] = 0 }
         if (obj['femaleyet'] == undefined) { obj['femaleyet'] = 0 }
