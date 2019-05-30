@@ -142,7 +142,6 @@ type AuthPayload {
 }
 
 type User {
-  id : ID!
   wechat: String
   personalmsg:Personalmsg
 }

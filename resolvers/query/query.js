@@ -7,14 +7,12 @@ const query = {
   async me(parent, args, ctx, info) {
     const id = getUserId(ctx)
     const users = await ctx.prismaAgent.users({ where: { id } })
-    const profiles = await ctx.prismaAgent.profiles({ where: { user: { id: id } } })
-    var meResult = {
-      id: users[0].id,
-      name: users[0].name,
-      email: users[0].email,
-      profile: profiles[0]
+    const personalmsgs = await ctx.prismaAgent.personalmsgs({ where: { user: { id: id } } })
+    var result = {
+      wechat: users[0].wechat,
+      personalmsgs: personalmsgs[0]
     }
-    return meResult
+    return result
   },
   
   async search(parent, args, ctx, info) {

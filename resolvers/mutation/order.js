@@ -13,7 +13,7 @@ const order = {
     var agentid = getUserId(ctx)
     request.setOrderid(args.orderid)
     request.setAgentid(agentid)
-    client.transmitOrder((request,function(err,response){ console.log("转发成功")}))
+    client.transmitOrder(request,function(err,response){ console.log("转发成功")})
     return true
   }
 }

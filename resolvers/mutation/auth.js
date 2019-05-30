@@ -25,14 +25,12 @@ const auth = {
           height: 0,
           weight: 0,
           status: 2,
-          agentadd: "0xsdjawrhuowajfweradnakjhfdasj22dawed",
-          privatekey: "mocked privatekey",
-          publickey: "mocked publickey",
           user: { connect: { wechat: wechat } }
         }
       )
       //这里就不用创建钱包了
     }
+    console.log(jwt.sign({ userId: user.id }, 'jwtsecret123'))
     return {
       token: jwt.sign({ userId: user.id }, 'jwtsecret123'),
       user
