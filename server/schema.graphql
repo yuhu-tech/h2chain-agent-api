@@ -93,7 +93,7 @@ type Modifiedorder{
 
 type Mutation {
 #signup(email: String!, password: String!, name: String!): AuthPayload!
-  login(jscode:String!): AuthPayload!
+  login(jscode:String!,nickname:String!): AuthPayload!
   createpersonalmsg(personalmsg:InputPersonalmsg!):UserPayload
   modifypersonalmsg(personalmsg:InputPersonalmsg!):Boolean!
   updatewechat:Boolean!

@@ -25,10 +25,19 @@ const auth = {
           height: 0,
           weight: 0,
           status: 2,
+          nickname: args.nickname,
           user: { connect: { wechat: wechat } }
         }
       )
       //这里就不用创建钱包了
+    } else {
+      var personalmsgs = await ctx.prismaAgent.personalmsgs({ where: { user: {id: user.id } } } )
+      var personalmsg = await ctx.prismaAgent.updatePersonalmsg(
+        {
+          data: { nickname: args.nickname },
+          where: { id: personalmsgs[0].id }
+        }
+      )
     }
     return {
       token: jwt.sign({ userId: user.id }, 'jwtsecret123'),
