@@ -42,6 +42,16 @@ function queryHistory(request) {
   })
 }
 
+function queryRemark(request) {
+  return new Promise((resolve, reject) => {
+      client.queryRemark(request, (err, date) => {
+          if (err) reject(err);
+          resolve(date);
+      })
+  })
+}
+
+
 async function AgentSearchHistory(ctx, ptid) {
   var request = new messages.QueryExperienceRequest();
   request.setPtid(ptid)
@@ -280,7 +290,7 @@ async function AgentGetOrderList(ctx, agentid, orderid, status, datetime, ptname
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-async function AgentGetOrder(ctx, orderid) {
+async function AgentGetOrder(ctx, orderid, ptname) {
   try {
     var request = new messages.QueryRequest()
     request.setOrderid(orderid)
