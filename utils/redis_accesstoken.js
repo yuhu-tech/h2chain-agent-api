@@ -57,7 +57,9 @@ var getAccessToken = async function (num) {
             key = 'adviser'
         } else if (num === 3) {
             key = 'pt'
-        } else {
+        } else if (num === 4){
+            key = 'agent'
+        }else {
 
         }
         await clientOn

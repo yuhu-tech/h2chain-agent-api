@@ -25,8 +25,17 @@ async function refreshPtAT (){
     return res
 }
 
+async function refreshAgentAT (){
+    var num = 4
+    var key = 'agent'
+    var value = await GET.getAccessToken(num)
+    var res = await RDS.setAccessToken(key,value)
+    return res
+}
+
 module.exports = {
     refreshHotelAT,
     refreshAdviserAT,
-    refreshPtAT
+    refreshPtAT,
+    refreshAgentAT,
 }
