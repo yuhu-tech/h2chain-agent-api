@@ -3,7 +3,7 @@
 type Query {
   me: User!
   getphonenumber(encryptedData:String!,iv:String!,jscode:String!):String
-  search(orderid: String,state:Int,datetime:Int,isregistered:Int):[Order]
+  search(orderid: String,state:Int,datetime:Int,isregistered:Int,ptname:String):[Order]
 }
 
 type Adviser{
