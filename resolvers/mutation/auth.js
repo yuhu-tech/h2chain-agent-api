@@ -30,7 +30,6 @@ const auth = {
       )
       //这里就不用创建钱包了
     }
-    console.log(jwt.sign({ userId: user.id }, 'jwtsecret123'))
     return {
       token: jwt.sign({ userId: user.id }, 'jwtsecret123'),
       user
