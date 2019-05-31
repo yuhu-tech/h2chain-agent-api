@@ -58,7 +58,7 @@ function getAccessToken() {
     return new Promise((resoleve, reject) => {
         var appid = config.Appids.testAgent
         var secret = config.Secrets.testAgent
-        const url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=' + appid + '&secret=' + secret;
+        const url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=' + appid + '&secret=' + secret
         request(url, function (error, response, body) {
             if (!error && response.statusCode == 200) {
                 const access_token = JSON.parse(body).access_token;
