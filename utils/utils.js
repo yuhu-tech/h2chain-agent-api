@@ -33,14 +33,15 @@ function getOpenId(jsCode, num) {
         } else if (num === 3) {
             appid = config.Appids.testPt
             secret = config.Secrets.testPt
+        } else if (num === 4){
+            appid = config.Appids.testAgent
+            secret = config.Secrets.testAgent
         } else {
             resolve()
         }
 
         const url = `https://api.weixin.qq.com/sns/jscode2session?appid=${appid}&secret=${secret}&js_code=${jsCode}&grant_type=authorization_code`
-
         request(url, function (error, response, body) {
-
             if (!error && response.statusCode == 200) {
                 //console.log(body)
                 const openid = JSON.parse(body).openid;
@@ -50,6 +51,39 @@ function getOpenId(jsCode, num) {
             }
         });
     })
+}
+
+
+function getAccessToken() {
+    return new Promise((resoleve, reject) => {
+        var appid = config.Appids.testAgent
+        var secret = config.Secrets.testAgent
+        const url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=' + appid + '&secret=' + secret
+        request(url, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                const access_token = JSON.parse(body).access_token;
+                resoleve(access_token)
+            } else {
+                reject(error)
+            }
+        });
+    })
+}
+
+
+function getNickname(openid, accessToken) {
+    return new Promise((resoleve, reject) => {
+        const url = 'https://api.weixin.qq.com/sns/userinfo?access_token='+accessToken+'&openid='+openid+'&lang=zh_CN'
+        request(url, function (error, response, body) {
+            if (!error && response.statusCode == 200) {
+                const userinfo = JSON.parse(body);
+                console.log(userinfo)
+                resoleve(userinfo.nickname)
+            } else {
+                reject(error)
+            }
+        });
+    }) 
 }
 
 function getSessionKey(jsCode, num) {
@@ -88,5 +122,7 @@ module.exports = {
     getUserId,
     AuthError,
     getOpenId,
-    getSessionKey
+    getSessionKey,
+    getAccessToken,
+    getNickname
 }

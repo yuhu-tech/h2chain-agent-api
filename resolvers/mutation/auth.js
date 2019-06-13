@@ -1,19 +1,19 @@
 const bcrypt = require('bcryptjs')
 const jwt = require('jsonwebtoken')
 const { getUserId, getOpenId } = require('../../utils/utils')
-const { CreateAccount,Issue }  = require('../../token/ali_token/handle/mutation/mutation')
+const { CreateAccount, Issue } = require('../../token/ali_token/handle/mutation/mutation')
 const { QueryAccount } = require('../../token/ali_token/handle/query/query')
 const math = require('math')
 const auth = {
   async login(parent, args, ctx, info) {
     //TODO
     //这里需要改下jscode
-    var wechat = await getOpenId(args.jscode,3)
+    var wechat = await getOpenId(args.jscode, 4)
     console.log(wechat)
-    const users = await ctx.prismaAgent.users({ where: { wechat : wechat } })
+    const users = await ctx.prismaAgent.users({ where: { wechat: wechat } })
     //在表中找openid，如果找不到，就注册绑定，如果找到了，就直接返回
     var user = users[0]
-    if (user == undefined || user == null ) {
+    if (user == undefined || user == null) {
       console.log("can't find this user, registering...")
       var user = await ctx.prismaAgent.createUser({ wechat: wechat })
       var personalmsg = await ctx.prismaAgent.createPersonalmsg(
@@ -25,13 +25,19 @@ const auth = {
           height: 0,
           weight: 0,
           status: 2,
-          agentadd:"0xsdjawrhuowajfweradnakjhfdasj22dawed",
-          privatekey:"mocked privatekey",
-          publickey:"mocked publickey",
+          nickname: args.nickname,
           user: { connect: { wechat: wechat } }
         }
       )
       //这里就不用创建钱包了
+    } else {
+      var personalmsgs = await ctx.prismaAgent.personalmsgs({ where: { user: {id: user.id } } } )
+      var personalmsg = await ctx.prismaAgent.updatePersonalmsg(
+        {
+          data: { nickname: args.nickname },
+          where: { id: personalmsgs[0].id }
+        }
+      )
     }
     return {
       token: jwt.sign({ userId: user.id }, 'jwtsecret123'),
