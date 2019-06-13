@@ -15,17 +15,17 @@ function getAccessToken(num) {
         var appid = ''
         var secret = ''
         if (num === 1) {
-            appid = config.Appids.testHotel
-            secret = config.Secrets.testHotel
+            appid = config.Appids.hotel
+            secret = config.Secrets.hotel
         }else if (num === 2){
-            appid = config.Appids.testAdviser
-            secret = config.Secrets.testAdviser
+            appid = config.Appids.adviser
+            secret = config.Secrets.adviser
         }else if (num ===3){
-            appid = config.Appids.testPt
-            secret = config.Secrets.testPt
+            appid = config.Appids.pt
+            secret = config.Secrets.pt
         }else if (num === 4){
-            appid = config.Appids.testAgent
-            secret = config.Secrets.testAgent
+            appid = config.Appids.agent
+            secret = config.Secrets.agent
         }else{
             resoleve()
         }

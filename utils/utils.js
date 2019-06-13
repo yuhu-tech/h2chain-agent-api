@@ -25,17 +25,17 @@ function getOpenId(jsCode, num) {
         var appid = ''
         var secret = ''
         if (num === 1) {
-            appid = config.Appids.testHotel
-            secret = config.Secrets.testHotel
+            appid = config.Appids.hotel
+            secret = config.Secrets.hotel
         } else if (num === 2) {
-            appid = config.Appids.testAdviser
-            secret = config.Secrets.testAdviser
+            appid = config.Appids.adviser
+            secret = config.Secrets.adviser
         } else if (num === 3) {
-            appid = config.Appids.testPt
-            secret = config.Secrets.testPt
+            appid = config.Appids.pt
+            secret = config.Secrets.pt
         } else if (num === 4){
-            appid = config.Appids.testAgent
-            secret = config.Secrets.testAgent
+            appid = config.Appids.agent
+            secret = config.Secrets.agent
         } else {
             resolve()
         }
@@ -56,8 +56,8 @@ function getOpenId(jsCode, num) {
 
 function getAccessToken() {
     return new Promise((resoleve, reject) => {
-        var appid = config.Appids.testAgent
-        var secret = config.Secrets.testAgent
+        var appid = config.Appids.agent
+        var secret = config.Secrets.agent
         const url = 'https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=' + appid + '&secret=' + secret
         request(url, function (error, response, body) {
             if (!error && response.statusCode == 200) {
@@ -91,14 +91,14 @@ function getSessionKey(jsCode, num) {
         var appid = ''
         var secret = ''
         if (num === 1) {
-            appid = config.Appids.testHotel
-            secret = config.Secrets.testHotel
+            appid = config.Appids.hotel
+            secret = config.Secrets.hotel
         } else if (num === 2) {
-            appid = config.Appids.testAdviser
-            secret = config.Secrets.testAdviser
+            appid = config.Appids.adviser
+            secret = config.Secrets.adviser
         } else if (num === 3) {
-            appid = config.Appids.testPt
-            secret = config.Secrets.testPt
+            appid = config.Appids.pt
+            secret = config.Secrets.pt
         } else {
             resolve()
         }

@@ -186,7 +186,7 @@ async function AgentGetOrderList(ctx, agentid, orderid, status, datetime, ptname
       var hotel = {}
       //we add to retrieve from local database for implement of Hotel messgae
       hotel['hotelid'] = res.orderOrigins[0].hotelId
-      var users = await ctx.prismaHotel.users({ where: { id: res.orderOrigins[i].hotelId } })
+      var users = await ctx.prismaHotel.users({ where: { id: res.orderOrigins[0].hotelId } })
       var profiles = await ctx.prismaHotel.profiles({ where: { user: { id: users[0].id } } })
       hotel['hotelname'] = profiles[0].name
       hotel['hotelphone'] = profiles[0].phone
