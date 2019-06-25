@@ -84,7 +84,6 @@ async function AgentSearchHistory(ctx, ptid) {
 
 async function AgentGetOrderList(ctx, agentid, orderid, status, datetime, ptname) {
   try {
-    console.log(agentid)
     var orderList = []
     var request = new messages.QueryOOARequest();
     if (agentid != null && agentid != undefined) {
@@ -134,7 +133,7 @@ async function AgentGetOrderList(ctx, agentid, orderid, status, datetime, ptname
       originorder['mode'] = res.orderOrigins[0].mode
       originorder['orderstate'] = res.orderOrigins[0].status - 1
 
-      if (res.orderOrigins[0].orderAdviserModifies) {
+      if (res.orderOrigins && res.orderOrigins[0].orderAdviserModifies.length > 0) {
         if (res.orderOrigins[0].orderAdviserModifies[0].isFloat) {
           //we judge if we will tranfer male and female number by the mode
           if (res.orderOrigins[0].mode == 0) {
@@ -195,7 +194,7 @@ async function AgentGetOrderList(ctx, agentid, orderid, status, datetime, ptname
       hotel['cover'] = profiles[0].cover
 
       var postorder = {}
-      if (res.orderOrigins[i].orderAdviserModifies.length != 0) {
+      if (res.orderOrigins && res.orderOrigins[0].orderAdviserModifies.length != 0) {
         postorder['orderid'] = res.orderOrigins[0].id
         postorder['salary'] = res.orderOrigins[0].orderAdviserModifies[0].hourlySalary
         postorder['workcontent'] = res.orderOrigins[0].orderAdviserModifies[0].workCount   // 这里有一个命名错误，是由于datamodel.graphql 里面字段错误造成的，后续会改
@@ -208,20 +207,18 @@ async function AgentGetOrderList(ctx, agentid, orderid, status, datetime, ptname
       obj['adviser'] = adviser
       obj['hotel'] = hotel
       obj['postorder'] = postorder
-      obj['state'] = res.orderOrigins[i].status - 1
+      obj['state'] = res.orderOrigins[0].status - 1
 
       var pts = []
       // 查询当前已报名的男女人数
       // 调用queryPTOfOrder()接口查询，某个订单下已报名PT的总人数
       try {
-
         var request = new messages.QueryPTRequest();
         request.setOrderid(res.orderOrigins[0].id);
         request.setPtstatus(13);
         request.setType(3)
         request.setInviterid(agentid)
         var response = await queryPt(request)
-        console.log(response)
         obj['countyet'] = response.array[0].length
         if (obj['maleyet'] == undefined) { obj['maleyet'] = 0 }
         if (obj['femaleyet'] == undefined) { obj['femaleyet'] = 0 }
@@ -290,7 +287,7 @@ async function AgentGetOrderList(ctx, agentid, orderid, status, datetime, ptname
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-async function AgentGetOrder(ctx, orderid, ptname) {
+async function AgentGetOrder(ctx, agentid, orderid, ptname) {
   try {
     var request = new messages.QueryRequest()
     request.setOrderid(orderid)
@@ -412,6 +409,8 @@ async function AgentGetOrder(ctx, orderid, ptname) {
         var request = new messages.QueryPTRequest();
         request.setOrderid(res.orderOrigins[i].id);
         request.setPtstatus(13);
+        request.setType(3)
+        request.setInviterid(agentid)
         var response = await queryPt(request)
         obj['countyet'] = response.array[0].length
         //initial obj[maleyet] and obj[femaleyet]

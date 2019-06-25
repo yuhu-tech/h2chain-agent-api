@@ -20,7 +20,7 @@ const query = {
   async search(parent, args, ctx, info) {
     const id = getUserId(ctx)
     if (args.state == 21) {
-      doing = await handles.AgentGetOrder(ctx,args.orderid,args.ptname);
+      doing = await handles.AgentGetOrder(ctx, id, args.orderid,args.ptname);
       return doing
     }
     if (args.state == 11) {

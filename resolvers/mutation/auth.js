@@ -8,8 +8,9 @@ const auth = {
   async login(parent, args, ctx, info) {
     //TODO
     //这里需要改下jscode
+    console.log("login args jscode agent:",args.jscode)
     var wechat = await getOpenId(args.jscode, 4)
-    console.log(wechat)
+    console.log("login wechat:",wechat)
     const users = await ctx.prismaAgent.users({ where: { wechat: wechat } })
     //在表中找openid，如果找不到，就注册绑定，如果找到了，就直接返回
     var user = users[0]
