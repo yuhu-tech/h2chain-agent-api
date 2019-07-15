@@ -92,11 +92,10 @@ async function AgentGetOrderList(ctx, agentid, orderid, status, datetime, ptname
     if (status != null && status != undefined) {
       request.setStatus(status + 1)
     }
-    var response = await queryOrderOfAgent(request);
-    if (!response.array[0][0]) return
-    for (var i = 0; i < response.array[0].length; i++) {
-      var res = JSON.parse(response.array[0][i])
-      console.log(res)
+    var responseOrderList = await queryOrderOfAgent(request);
+    if (!responseOrderList.array[0][0]) return
+    for (var i = 0; i < responseOrderList.array[0].length; i++) {
+      var res = JSON.parse(responseOrderList.array[0][i])
       var obj = {}
       var modifiedorder = []
       var isModified = false
