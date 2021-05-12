@@ -23,7 +23,7 @@
     "google-protobuf": "^3.8.0-rc.1",
     "graphql": "^14.2.1",
     "graphql-yoga": "^1.17.4",
-    "grpc": "^1.20.3",
+    "grpc": "^1.24.9",
     "jsonwebtoken": "^8.5.1",
     "math": "0.0.3",
     "mime": "^2.4.2",
